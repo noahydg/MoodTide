@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# build output
+dist
+
+# env / secrets
+.env
+.env.local
+.env.*.local
+
+# logs & local runtime state
+*.log
+.moodtide-run/
+.Rhistory
+
+# OS
+.DS_Store
+**/.DS_Store

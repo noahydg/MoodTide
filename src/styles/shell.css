@@ -1,0 +1,581 @@
+/* ============================================================
+   手机模型 + 抖音外壳 + 心潮卡（1:1 复刻获奖 Demo 莫干山攻略）
+   ============================================================ */
+
+/* ---------- 手机模型（桌面演示用） ---------- */
+.device {
+  position: relative;
+  height: min(844px, 94dvh);
+  aspect-ratio: 390 / 844;
+}
+.device__frame {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 14px;
+  border-radius: 56px;
+  background: linear-gradient(150deg, #3a3d44 0%, #16181d 45%, #0a0b0e 100%);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.06),
+    inset 0 2px 3px rgba(255, 255, 255, 0.12);
+}
+.device__screen {
+  position: absolute;
+  inset: 14px;
+  border-radius: 44px;
+  overflow: hidden;
+  background: #000;
+  /* 屏幕内的安全区：状态栏避开灵动岛 */
+  --safe-top: 18px;
+  --safe-bottom: 14px;
+}
+/* 灵动岛（相对 .device 定位，落在屏幕顶部居中） */
+.device__island {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 116px;
+  height: 33px;
+  border-radius: 18px;
+  background: #000;
+  z-index: 60;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+/* 屏幕微反光 */
+.device__glare {
+  position: absolute;
+  inset: 14px;
+  border-radius: 44px;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 30%);
+  z-index: 55;
+}
+/* 侧键（电源 / 音量） */
+.device__frame::before {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 200px;
+  width: 3px;
+  height: 92px;
+  border-radius: 2px;
+  background: linear-gradient(270deg, #04050a, #2a2d34);
+}
+.device__frame::after {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 150px;
+  width: 3px;
+  height: 60px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #04050a, #2a2d34);
+  box-shadow: 0 82px 0 #1a1c22, 0 150px 0 #1a1c22;
+}
+
+/* 真机 / 窄屏：去掉手机模型，全屏铺满 */
+@media (max-width: 520px) {
+  body {
+    background: #000;
+  }
+  .stageRoot {
+    display: block;
+  }
+  .device {
+    width: 100vw;
+    height: 100dvh;
+    aspect-ratio: auto;
+  }
+  .device__frame {
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    background: #000;
+  }
+  .device__frame::before,
+  .device__frame::after {
+    display: none;
+  }
+  .device__screen {
+    inset: 0;
+    border-radius: 0;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .device__island,
+  .device__glare {
+    display: none;
+  }
+}
+
+/* ============================================================
+   舞台（一屏）
+   ============================================================ */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+.stage__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+}
+/* 情境配色叠加：让海景带上「此刻」的色温（此步默认暖蓝） */
+.stage__tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 24, 38, 0.1) 0%, rgba(10, 20, 34, 0.5) 100%);
+  mix-blend-mode: multiply;
+}
+/* 可读性遮罩（顶/底加深） */
+.stage__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.12) 14%,
+    rgba(0, 0, 0, 0.12) 30%,
+    rgba(0, 0, 0, 0.58) 78%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+}
+
+/* ---------- 状态栏 ---------- */
+.statusbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  height: calc(var(--safe-top) + 40px);
+  padding: var(--safe-top) 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  font-weight: 600;
+}
+.statusbar__time {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.statusbar__time .ic-loc {
+  width: 11px;
+  height: 11px;
+  transform: translateY(-1px);
+}
+.statusbar__sys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  fill: #fff;
+}
+.ic-signal {
+  width: 17px;
+  height: 11px;
+}
+.ic-wifi {
+  width: 16px;
+  height: 11px;
+}
+.statusbar__batt {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.statusbar__batt i {
+  font-size: 11px;
+  font-style: normal;
+}
+.statusbar__batt svg {
+  width: 25px;
+  height: 12px;
+}
+
+/* ---------- 顶部导航 ---------- */
+.topnav {
+  position: absolute;
+  top: calc(var(--safe-top) + 38px);
+  left: 0;
+  right: 0;
+  z-index: 25;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 6px;
+  color: #fff;
+}
+.topnav__menu,
+.topnav__search {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: #fff;
+  background: none;
+  border: none;
+}
+.topnav__menu svg {
+  width: 21px;
+  height: 15px;
+  fill: #fff;
+}
+.topnav__search svg {
+  width: 20px;
+  height: 20px;
+}
+.topnav__tabs {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.topnav__tabs::-webkit-scrollbar {
+  display: none;
+}
+.topnav__tabs span {
+  flex: none;
+  font-size: 15.5px;
+  color: rgba(255, 255, 255, 0.66);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+  position: relative;
+  padding-bottom: 5px;
+}
+.topnav__tabs span.is-active {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #fff;
+}
+.topnav__tabs span.is-active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 3px;
+  border-radius: 2px;
+  background: #fff;
+}
+
+/* ============================================================
+   心潮卡（1:1 莫干山攻略）
+   ============================================================ */
+.mcard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--safe-top) + 84px);
+  bottom: calc(var(--safe-bottom) + 50px);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+}
+.mcard__scroll {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 4px 16px 8px;
+}
+.mcard__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 大标题 + AI生成 */
+.mcard__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 6px;
+}
+.mcard__title {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+}
+.mcard__ai {
+  flex: none;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 7px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* 玻璃卡通用 */
+.glass {
+  margin-top: 13px;
+  border-radius: 16px;
+  background: rgba(8, 18, 28, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+/* 四宫格 */
+.stats {
+  display: flex;
+  padding: 15px 8px;
+}
+.stat {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.stat + .stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14%;
+  height: 72%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.stat label {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-bottom: 7px;
+}
+.stat b {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+.stat--mood {
+  color: var(--dy-cyan) !important;
+}
+
+/* 描述卡 */
+.desc {
+  padding: 15px 16px 13px;
+}
+.desc__text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
+}
+.desc__star {
+  color: var(--dy-cyan);
+  margin-right: 4px;
+}
+.wavechart {
+  margin-top: 12px;
+}
+.wavechart svg {
+  display: block;
+  width: 100%;
+  height: 52px;
+}
+.wavechart__area {
+  fill: url(#wcFill);
+}
+.wavechart__line {
+  fill: none;
+  stroke: var(--mood-sea);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px var(--mood-sea));
+}
+.wavechart__axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+
+/* 区块标题 */
+.mcard__section {
+  margin: 18px 2px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* 语录卡 */
+.quote {
+  padding: 13px 15px;
+}
+.quote__main {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.4;
+}
+.quote__sub {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+.quote__ava {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* 底部固定：按钮 + 上滑提示 */
+.mcard__footer {
+  flex: none;
+  padding: 10px 16px 4px;
+}
+.mcard__actions {
+  display: flex;
+  gap: 12px;
+}
+.cta {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 13px;
+  color: #fff;
+  border: none;
+}
+.cta--ghost {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.cta--fill {
+  background: rgba(255, 255, 255, 0.92);
+  color: #142436;
+}
+.cta:active {
+  transform: scale(0.97);
+}
+.mcard__up {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 12px;
+  animation: floatUp 2.4s ease-in-out infinite;
+}
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(-3px); opacity: 1; }
+}
+
+/* ---------- 平台操作栏（不感兴趣/查看详情/上滑）—— 抖音自带，全局固定 ---------- */
+.actbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--safe-bottom) + 50px);
+  z-index: 28;
+  padding: 8px 16px 10px;
+}
+.actbar__btns {
+  display: flex;
+  gap: 12px;
+}
+.actbar__btn {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 13px;
+  border: none;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.actbar__btn--primary {
+  background: rgba(255, 255, 255, 0.92);
+  color: #14283a;
+  border-color: transparent;
+}
+.actbar__btn:active {
+  transform: scale(0.98);
+}
+.actbar__up {
+  margin-top: 9px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.actbar__up .ico {
+  animation: floatUp 2.4s ease-in-out infinite;
+}
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* ---------- 底部 Tab ---------- */
+.tabbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  height: calc(var(--safe-bottom) + 50px);
+  padding-bottom: var(--safe-bottom);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #000;
+}
+.tab {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.66);
+}
+.tab.is-active {
+  color: #fff;
+  font-weight: 700;
+}
+.tab--plus {
+  flex: none;
+}
+.plus {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 30px;
+  border-radius: 9px;
+  background: #fff;
+  color: #000;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  /* 抖音标志：白底黑＋，左青右红错位描边（box-shadow 永远画在白底之下） */
+  box-shadow: -3px 0 0 #25f4ee, 3px 0 0 var(--dy-red);
+}

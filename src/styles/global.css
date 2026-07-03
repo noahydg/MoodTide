@@ -1,0 +1,50 @@
+/* ============================================================
+   MoodTide 基础层 —— 变量 / 重置 / 桌面演示背景
+   品牌色：抖音红 #FE2C55 / 抖音青 #25F4EE
+   ============================================================ */
+:root {
+  --dy-red: #fe2c55;
+  --dy-cyan: #25f4ee;
+  --ink: #ffffff;
+  --ink-dim: rgba(255, 255, 255, 0.7);
+  --ink-faint: rgba(255, 255, 255, 0.46);
+  /* 情境配色（情绪档运行时注入；此步用默认晨曦暖蓝） */
+  --mood-a: #163049;
+  --mood-b: #2b5a78;
+  --mood-sea: #cfe6f2;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei',
+    'Helvetica Neue', sans-serif;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* 桌面演示「影棚」背景：深色 + 一缕暖光 */
+body {
+  background:
+    radial-gradient(120% 90% at 70% 12%, #1b2230 0%, #0c0e14 55%, #06070b 100%);
+}
+
+/* 居中放置手机模型 */
+.stageRoot {
+  width: 100vw;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+}

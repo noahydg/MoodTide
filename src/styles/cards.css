@@ -1,0 +1,859 @@
+/* ============================================================
+   第一层 · 4 卡横滑 —— 对标获奖 Demo（莫干山攻略）密度
+   紧凑充实 · 玻璃信息卡 · SF 风格 SVG 图标（无 emoji）
+   ============================================================ */
+
+/* 横滑容器：上方留一道海景，内容偏上但不顶到导航；
+   下让出 平台操作栏 + Tab 栏 的高度 */
+.pager {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 19%;
+  bottom: calc(var(--safe-bottom) + 144px);
+  z-index: 20;
+}
+.pager__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.pager__track::-webkit-scrollbar {
+  display: none;
+}
+.pager__page {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.pager__dots {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  z-index: 2;
+}
+.pager__dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.25s ease;
+}
+.pager__dots i.is-on {
+  width: 17px;
+  border-radius: 3px;
+  background: #fff;
+}
+
+/* ---------- SF 风格图标 ---------- */
+.ico {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: -3px;
+  flex: none;
+}
+.ico--xs {
+  width: 11px;
+  height: 11px;
+  vertical-align: -1px;
+  margin-right: 3px;
+}
+.ico--q {
+  width: 18px;
+  height: 18px;
+}
+.ico--up {
+  width: 11px;
+  height: 11px;
+  vertical-align: -1px;
+}
+
+/* ---------- 卡片骨架（一屏装下，不滚动） ---------- */
+.card {
+  position: relative;
+  height: 100%;
+  padding: 2px 15px 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 入场动效：标题 + 各玻璃卡 + 小标题 交错浮现（.is-in 由 pager 进入时添加） */
+.card1.is-in > * {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: cardRise 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.card1.is-in > .c-head { animation-delay: 0.04s; }
+.card1.is-in > .combo { animation-delay: 0.16s; }
+.card1.is-in > .c-label { animation-delay: 0.3s; }
+.card1.is-in > .peers { animation-delay: 0.4s; }
+@keyframes cardRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 同潮的人两行再各自轻微错开 */
+.card1.is-in .peer {
+  opacity: 0;
+  animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.card1.is-in .peer:nth-child(1) { animation-delay: 0.46s; }
+.card1.is-in .peer:nth-child(2) { animation-delay: 0.56s; }
+
+/* 大标题一行不换行 + AI 徽标 */
+.c-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+.c-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+.c-ai {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 7px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.08);
+}
+.c-sig {
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--ink-dim);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+.c-label {
+  margin: 8px 2px 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* 玻璃卡（更收紧） */
+.glass {
+  margin-top: 7px;
+  border-radius: 14px;
+  background: rgba(8, 18, 28, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================
+   卡1 · 此刻的潮
+   ============================================================ */
+/* 合并玻璃卡：四宫格 + 分隔线 + (AI文案 | 声波缩略图+时长) */
+.combo {
+  padding: 11px 10px 11px;
+}
+.grid4 {
+  display: flex;
+}
+.g4 {
+  flex: 1;
+  text-align: center;
+}
+.g4 label {
+  display: block;
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.g4 b {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.g4--mood {
+  color: var(--dy-cyan) !important;
+  white-space: nowrap;
+}
+.combo__div {
+  height: 1px;
+  margin: 9px 4px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.combo__star {
+  color: var(--mood-sea);
+  margin-right: 4px;
+}
+
+/* —— AI文案(左) | 情绪疗愈弧缩略图(右)：落潮→涨潮 上扬弧线 + 中心半透明播放钮 —— */
+.combo__body {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 4px;
+}
+.combo__desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+}
+.combo__thumb {
+  flex: none;
+  width: 96px;
+  text-align: center;
+}
+.harc {
+  position: relative;
+  height: 62px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(20, 36, 54, 0.55), rgba(10, 18, 30, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.harc svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* 背景里淡淡的「音乐流动」波浪：一条很轻的波纹缓缓横向漂移（在弧线之下） */
+.harc__wave {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  pointer-events: none;
+  opacity: 0.18;
+  background-repeat: repeat-x;
+  background-size: 60px 100%;
+  background-position: 0 center;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='60'%20height='46'%3E%3Cpath%20d='M0%2026%20Q15%2018%2030%2026%20T60%2026'%20fill='none'%20stroke='%23bfe0ef'%20stroke-width='1.4'/%3E%3Cpath%20d='M0%2034%20Q15%2041%2030%2034%20T60%2034'%20fill='none'%20stroke='%23ffd6a0'%20stroke-width='1'/%3E%3C/svg%3E");
+  animation: harcWave 6.5s linear infinite;
+}
+@keyframes harcWave {
+  to { transform: translateX(-60px); }
+}
+/* 播放时波浪稍稍明显一点点（仍克制） */
+.card1.is-playing .harc__wave {
+  opacity: 0.3;
+}
+.harc__line {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 130;
+  stroke-dashoffset: 130;
+  animation: harcDraw 1.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+@keyframes harcDraw {
+  to { stroke-dashoffset: 0; }
+}
+/* 涨潮端的光点 */
+.harc__dot {
+  position: absolute;
+  right: 5%;
+  top: 14%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffd6a0;
+  box-shadow: 0 0 8px 2px rgba(255, 214, 160, 0.85);
+  animation: harcGlow 2.2s ease-in-out infinite;
+}
+@keyframes harcGlow {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+/* 落潮 / 涨潮 端标 */
+.harc__lbl {
+  position: absolute;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.66);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.harc__lbl--l { left: 7%; bottom: 12%; }
+.harc__lbl--r { right: 7%; top: 10%; color: #ffd6a0; }
+/* 中心半透明播放钮（在原弧线上轻叠，淡） */
+.harc__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.harc__play .ico {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* 播放三角在 viewBox 里偏左，向右 0.5px 做光学居中 */
+  transform: translate(calc(-50% + 0.5px), -50%);
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+.harc__play:active {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+/* 播放中：按钮稍亮 + 背后淡淡呼吸光圈（只动 opacity/transform，省性能） */
+.card1.is-playing .harc__play {
+  background: rgba(255, 255, 255, 0.26);
+}
+.card1.is-playing .harc__play::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(191, 224, 239, 0.55);
+  animation: playHalo 2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes playHalo {
+  0% { opacity: 0.7; transform: scale(0.72); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.combo__dur {
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.2px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+/* 此刻同潮的人（左评论 + 右可点播放缩略图，撑满剩余高度，消除空洞） */
+.c-label {
+  flex: none;
+}
+.peers {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 4px 12px;
+}
+.peer {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 6px 0;
+}
+.peer + .peer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.peer__l {
+  flex: 1;
+  min-width: 0;
+}
+.peer__line {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #fff;
+}
+.peer__q {
+  color: var(--mood-sea);
+  margin-right: 4px;
+  opacity: 0.8;
+}
+.peer__q .ico {
+  width: 13px;
+  height: 13px;
+  vertical-align: -2px;
+}
+.peer__by {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+}
+.peer__ava {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.16);
+}
+.peer__ava .ico {
+  width: 10px;
+  height: 10px;
+}
+/* 右侧作品缩略图（可点播放） */
+.ptw {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  background:
+    radial-gradient(120% 100% at 30% 20%, color-mix(in srgb, var(--t) 70%, #fff 0%), #0a1622 90%);
+}
+.ptw__bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding: 12px;
+  opacity: 0.6;
+}
+.ptw__bars i {
+  width: 3px;
+  height: 30%;
+  border-radius: 2px;
+  background: #fff;
+}
+.ptw.is-playing .ptw__bars i {
+  animation: eq 0.8s ease-in-out infinite alternate;
+  animation-delay: var(--d);
+}
+.ptw__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  backdrop-filter: blur(2px);
+}
+.ptw__play .ico {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   卡2 · 拍打海面 Tap the Sea
+   ============================================================ */
+.card2 {
+  position: relative;
+}
+.sea__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(80% 60% at 50% 65%, var(--mood-sea), transparent 70%);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+.card2 > *:not(.sea__flash) {
+  position: relative;
+  z-index: 1;
+}
+.sea__zone {
+  flex: 1;
+  margin-top: 10px;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(10, 24, 38, 0.12), rgba(10, 30, 46, 0.34));
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+/* 水面 canvas：铺满拍打区，叠在实拍海景之上画光 */
+.sea__cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.sea__center {
+  position: relative;
+  text-align: center;
+  pointer-events: none;
+}
+.sea__bpm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 30px;
+  font-weight: 800;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+}
+.sea__bpm .ico {
+  width: 24px;
+  height: 24px;
+  color: var(--mood-sea);
+}
+.sea__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+}
+.sea__hint .ico {
+  width: 22px;
+  height: 22px;
+}
+.sea__bpmsub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+/* 哼一曲入口：图标 + 主标/副标两行 + 右箭头（不再挤成一行换行） */
+.sea__deep {
+  margin-top: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.sea__deep:active {
+  transform: scale(0.98);
+}
+.sea__deep-ic {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--mood-sea);
+}
+.sea__deep-ic .ico {
+  width: 18px;
+  height: 18px;
+}
+.sea__deep-tx {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sea__deep-tx b {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sea__deep-tx i {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.sea__deep-go {
+  flex: none;
+  color: var(--ink-faint);
+}
+.sea__deep-go .ico {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================================
+   卡3 · 给此刻的你（建议）
+   ============================================================ */
+.sug {
+  padding: 9px 13px;
+}
+.sug__opener {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.sug__chips {
+  margin-top: 9px;
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.sug__chip {
+  padding: 7px 13px;
+  font-size: 12.5px;
+  color: #fff;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+}
+.sug__chip.is-on {
+  background: #fff;
+  color: #14283a;
+  border-color: transparent;
+  font-weight: 700;
+}
+.sug__line {
+  margin-top: 9px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+  transition: opacity 0.18s ease;
+}
+.sug__why {
+  padding: 6px 14px;
+}
+.sw__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 12.5px;
+}
+.sw__row + .sw__row {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.sw__k {
+  color: var(--ink-faint);
+}
+.sw__v {
+  color: #fff;
+  font-weight: 600;
+}
+.sug__note {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 14px;
+}
+.sug__note .ico {
+  flex: none;
+  color: var(--mood-sea);
+}
+.sug__note p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+/* ============================================================
+   卡4 · 海潮日记（情绪时间轴）
+   ============================================================ */
+/* 潮汐周期进度条（文艺）：潮位从落潮涨向满潮，月亮随潮位上行 */
+.tide {
+  padding: 14px 16px 13px;
+}
+.tide__hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.tide__day {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.92);
+}
+.tide__day b {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 2px;
+}
+.tide__total {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+/* 潮位轨道：fill 从左涨到 pct，月亮骑在 fill 末端，终点 ring = 满潮目标 */
+.tide__track {
+  position: relative;
+  height: 6px;
+  margin: 18px 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+.tide__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--mood-sea), #ffd6a0);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--mood-sea) 60%, transparent);
+  animation: tideFill 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: left;
+}
+@keyframes tideFill {
+  from { transform: scaleX(0.04); }
+  to { transform: scaleX(1); }
+}
+/* 终点「满潮」目标：空心环，月亮正朝它涨去 */
+.tide__goal {
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 226, 189, 0.7);
+}
+/* 当前潮位的月亮（呼应 slogan「心是月」），left 由内联 pct 定位 */
+.tide__moon {
+  position: absolute;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #fff, #ffe9c8 55%, #ffce8f);
+  box-shadow: 0 0 12px 2px rgba(255, 214, 160, 0.85);
+  animation: harcGlow 2.2s ease-in-out infinite;
+}
+/* 落潮 / 满潮 分列两端，在轨道下方 */
+.tide__marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--ink-faint);
+}
+.tide__marks span:last-child {
+  color: #ffe2bd;
+}
+.diary {
+  padding: 11px 14px 4px;
+}
+.tl__item {
+  position: relative;
+  padding: 0 0 11px 22px;
+}
+.tl__item::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  bottom: -2px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.tl__item:last-child::before {
+  display: none;
+}
+.tl__node {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 10px var(--c);
+}
+.tl__item.is-now .tl__node {
+  animation: nodePulse 1.5s ease-in-out infinite;
+}
+@keyframes nodePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+.tl__top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.tl__top b {
+  font-size: 13.5px;
+}
+.tl__mood {
+  font-size: 12px;
+  font-weight: 600;
+}
+.tl__wave {
+  width: 58px;
+  height: 13px;
+  margin: 3px 0;
+}
+.tl__wave path {
+  fill: none;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+.tl__kept {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+/* 显示更多 → 跳第二层 */
+.diary__more {
+  margin-top: 4px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 9px 0 3px;
+  border: none;
+  background: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  color: var(--mood-sea);
+}
+.diary__more .ico {
+  width: 14px;
+  height: 14px;
+}
+.diary__more:active {
+  opacity: 0.6;
+}
+.diary__foot {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 14px;
+}
+.diary__foot .ico {
+  flex: none;
+  color: var(--mood-sea);
+}
+.diary__foot p {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}

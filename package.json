@@ -1,0 +1,24 @@
+{
+  "name": "moodtide",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "MoodTide 心潮 — 刷到就在响、按一下就带走、刷走即焚的活体情绪音乐卡片(抖音黑客松赛道三)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "go": "bash launch.sh",
+    "stop": "bash launch.sh stop",
+    "pack": "npm run build && bash scripts/pack.sh"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.11.1",
+    "qrcode-terminal": "^0.12.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0"
+  }
+}
